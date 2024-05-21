@@ -1,4 +1,4 @@
-Quantas doenças estão presentes na ontologia?
+11.1 Quantas doenças estão presentes na ontologia?
 
 PREFIX : <http://www.example.org/disease-ontology#>
 SELECT (COUNT(?disease) AS ?count)
@@ -6,7 +6,7 @@ WHERE {
   ?disease a :Disease
 }
 
-Que doenças estão associadas ao sintoma "yellowish_skin"?
+11.2 Que doenças estão associadas ao sintoma "yellowish_skin"?
 
 PREFIX : <http://www.example.org/disease-ontology#>
 SELECT ?disease
@@ -16,20 +16,63 @@ WHERE {
 }
 
 
-Que doenças estão associadas ao tratamento "exercise"?
+11.3 Que doenças estão associadas ao tratamento "exercise"?
 
-Produz uma lista ordenada alfabeticamente com o nome dos doentes.
+PREFIX : <http://www.example.org/disease-ontology#>
+SELECT ?disease
+WHERE {
+  ?disease a :Disease ;
+          :hasTreatment :Exercise .
+}
 
-[2 val.] Cria uma query CONSTRUCT que diagnostique a doença de cada pessoa, ou seja,
+
+11.4 Produz uma lista ordenada alfabeticamente com o nome dos doentes.
+
+PREFIX : <http://www.example.org/disease-ontology#>
+SELECT ?patientName
+WHERE {
+  ?patient a :Patient ;
+           :name ?patientName .
+}
+ORDER BY ?patientName
+
+
+12. Cria uma query CONSTRUCT que diagnostique a doença de cada pessoa, ou seja,
 produza uma lista de triplos com a forma :patientX :hasDisease :diseaseY. No fim,
 acrescenta estes triplos à ontologia;
 
-. [1 val.] Cria um query SPARQL que poduza uma distribuição dos doentes pelas doenças, ou seja,
+13. Cria um query SPARQL que poduza uma distribuição dos doentes pelas doenças, ou seja,
 dá como resultado uma lista de pares (doença, nº de doentes);
 
-. [1 val.] Cria um query SPARQL que poduza uma distribuição das doenças pelos sintomas, ou
+PREFIX : <http://www.example.org/disease-ontology#>
+SELECT ?disease (COUNT(?patient) AS ?numPatients)
+WHERE {
+  ?patient a :Patient ;
+           :hasDisease ?disease .
+}
+GROUP BY ?disease
+
+
+14. Cria um query SPARQL que poduza uma distribuição das doenças pelos sintomas, ou
 seja, dá como resultado uma lista de pares (sintoma, nº de doenças com o sintoma);
 
-. [1 val.] Cria um query SPARQL que poduza uma distribuição das doenças pelos tratamentos, ou
+PREFIX : <http://www.example.org/disease-ontology#>
+SELECT ?symptom (COUNT(DISTINCT ?disease) AS ?numDiseasesWithSymptom)
+WHERE {
+  ?disease a :Disease ;
+           :hasSymptom ?symptom .
+}
+GROUP BY ?symptom
+
+
+15. Cria um query SPARQL que poduza uma distribuição das doenças pelos tratamentos, ou
 seja, dá como resultado uma lista de pares (tratamento, nº de doenças com o
 tratamento).
+
+PREFIX : <http://www.example.org/disease-ontology#>
+SELECT ?treatment (COUNT(DISTINCT ?disease) AS ?numDiseasesWithTreatment)
+WHERE {
+  ?disease a :Disease ;
+           :hasTreatment ?treatment .
+}
+GROUP BY ?treatment
