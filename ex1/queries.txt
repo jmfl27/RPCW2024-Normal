@@ -1,0 +1,66 @@
+. Quantas classes estão definidas na Ontologia?
+
+- Sem os node_ (que são as unioes, etc...):
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT (COUNT(DISTINCT ?class) AS ?count)
+WHERE {
+    ?class a owl:Class .
+    FILTER(!STRSTARTS(str(?class), "http://www.w3.org/1999/02/22-rdf-syntax-ns#node_"))
+}
+
+- Com os node_:
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT (COUNT(DISTINCT ?class) AS ?count)
+WHERE {
+    ?class a owl:Class .
+}
+
+. Quantas Object Properties estão definidas na Ontologia?
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT (COUNT(DISTINCT ?property) AS ?count)
+WHERE {
+    ?property a owl:ObjectProperty .
+}
+
+
+. Quantos indivíduos existem na tua ontologia?
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT (COUNT(DISTINCT ?individual) AS ?count)
+WHERE {
+    ?individual a owl:NamedIndividual .
+}
+
+
+. Quem planta tomates?
+
+PREFIX : <http://rpcw.di.uminho.pt/2024/historia/>
+
+SELECT ?individuo
+WHERE {
+    ?individuo :faz :Cultiva .
+    ?quinta :aloja ?individuo .
+    ?quinta :cultiva :Tomate .
+}
+
+
+. Quem contrata trabalhadores temporários?
+
+PREFIX : <http://rpcw.di.uminho.pt/2024/historia/>
+
+SELECT ?dono
+WHERE {
+    ?dono a :Dono .
+    ?quinta :aloja ?dono .
+    ?quinta :aloja ?trabalhador .
+    ?trabalhador a :Trabalhador .
+}
+
